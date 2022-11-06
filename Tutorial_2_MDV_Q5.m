@@ -1,6 +1,7 @@
-wave = audioread('Dadadida.m4a'); % Read the audio file
-n = length(wave); % Number of points
-t = linspace(0,15,n);
+[wave, Fs] = audioread('Dadadida.m4a'); % Read the audio file
+n = length(wave); % Number of points, (n is odd)
+T = n/Fs; % Fs is sampling rate, T is total time of sample
+t = linspace(0,T,n);
 % Plot raw sample time trace
 plot(t,wave);
 xlabel('time (sec)')
@@ -12,7 +13,7 @@ xf = fft(wave,n);
 % Magnitude of complex spectrum
 modxf=sqrt(xf.*conj(xf));
 % Define frequency axis
-f = 1/15*(0:(n-1)/2 - 1); % The definition is different for odd and even number of points
+f = 1/T*(0:(n-1)/2 - 1); % The definition is different for odd and even number of points
 % Plot on log scale the raw sample spectrum
 semilogy(f,modxf(1:(n-1)/2))
 title('raw spectrum')
@@ -38,5 +39,4 @@ plot(t,real(yt))
 title('inverse fft of Filtered spectrum')
 xlabel('time (sec)')
 % Play the sound of the filtered sample
-Fs = n/15; % Sampling rate
 sound(real(yt),Fs)

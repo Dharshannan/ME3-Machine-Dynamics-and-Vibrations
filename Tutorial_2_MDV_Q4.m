@@ -1,6 +1,7 @@
-wave = audioread('Piano.m4a'); % Read the audio file
+[wave, Fs] = audioread('Piano.m4a'); % Read the audio file
 n = length(wave); % Number of points
-t = linspace(0,5,n); % (NOTE: n is even number of points)
+T = n/Fs; % Fs is sampling rate, T is total time of sample
+t = linspace(0,T,n); % (NOTE: n is even number of points)
 % Plot raw sample time trace
 plot(t,wave);
 xlabel('time (sec)')
@@ -11,7 +12,7 @@ xf = fft(wave,n);
 % Magnitude of complex spectrum
 modxf=sqrt(xf.*conj(xf));
 % Define frequency axis
-f = 1/5*(0:n/2 - 1); % The definition is different for odd and even number of points
+f = 1/T*(0:n/2 - 1); % The definition is different for odd and even number of points
 % Plot on log scale the raw sample spectrum
 semilogy(f,modxf(1:n/2))
 title('raw spectrum')
@@ -26,7 +27,7 @@ pause;
 
 %f(2501) = 500Hz
 %f(75001) = 15000Hz (filter between these indices)
-df = 1/5;
+df = 1/T;
 L = 500/df;
 U = 15000/df;
 xf(L:U) = 10^-10; % Filter frequency before F(Nq)
@@ -47,5 +48,4 @@ plot(t,real(yt))
 title('inverse fft of Filtered spectrum')
 xlabel('time (sec)')
 % Play the sound of the filtered sample
-Fs = n/5; % Sampling rate
 sound(real(yt),Fs)
